@@ -1,11 +1,14 @@
 package com.librarymanagement.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Builder
@@ -18,8 +21,15 @@ public class Book {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
     private String name;
-    private String  author;
-    private int cost;
+    private double cost;
+
+    @ManyToOne
+    @JoinColumn
+    @JsonIgnoreProperties("bookList")
+    private Author author;
+
+    @OneToMany(mappedBy = "book")
+    private List<Transaction> transactionList;
     @Enumerated(value = EnumType.STRING)
     private Genre genre;
     @CreationTimestamp
